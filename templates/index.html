@@ -76,10 +76,16 @@
             </div>
         {% elif result_by_term %}
             <div class="alert alert-info">🔎 조합 검색 결과는 없지만 단어별로 다음과 같은 결과가 있습니다.</div>
-            <!-- ✅ 예시 데이터 고정 안내문 추가 -->
+            <!-- ✅ 예시 데이터 동적 안내문 -->
             <div class="alert alert-secondary">
-                예시: 논리명 <strong>OriginalEntryList</strong>이고 물리명 <strong>ORGN_ENTRY_LST</strong>
+                예시: 논리명 <strong>{{ keyword }}</strong>이고 
+                물리명 <strong>
+                    {{
+                        result_by_term.keys() | list | join('_') | upper
+                    }}
+                </strong>
             </div>
+
             {% for term, rows in result_by_term.items() %}
                 <div class="card mb-4">
                     <div class="card-body">
