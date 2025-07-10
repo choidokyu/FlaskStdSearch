@@ -97,11 +97,47 @@
         {% elif result_by_term %}
             <div class="alert alert-info">🔎 조합 검색 결과는 없지만 단어별로 다음과 같은 결과가 있습니다.</div>
             <!-- ✅ 예시 데이터 동적 안내문 -->
+            
+            <!--
             <div class="alert alert-secondary">
-                예시: 논리명 <strong>{{ keyword }}</strong>이고 
+                예시: 논리명 <strong>{{ keyword  }}</strong>이고
                 물리명 <strong>{{ result_by_term.keys() | list | join('_') | upper }}</strong>
             </div>
-
+            -->
+            
+            <!--
+            {% if example_row %}
+            <div class="alert alert-secondary">
+                예시: 논리명 <strong>{{ example_row['논리명'] }}</strong>이고 
+                물리명 <strong>{{ example_row['물리명'] }}</strong>
+            </div>
+            {% endif %}
+            -->
+            
+            {% if example_row %}
+              <div class="alert alert-secondary">
+                  예시: 논리명 <strong>{{ example_row['논리명'] }}</strong>이고 
+                  물리명 <strong>{{ example_row['물리명'] }}</strong>
+              </div>
+            {% else %}
+              {% set physical_names = [] %}
+              {% for term in result_by_term.keys() %}
+                {% set row = result_by_term[term][0] %}
+                {% if row['물리명'] %}
+                  {% set _ = physical_names.append(row['물리명']) %}
+                {% endif %}
+              {% endfor %}
+              {% if physical_names %}
+                <div class="alert alert-secondary">
+                    예시: 논리명 <strong>{{ keyword }}</strong>이고 
+                    물리명 <strong>{{ physical_names | join('_') | upper }}</strong>
+                </div>
+              {% endif %}
+            {% endif %}
+            
+            
+            
+            
             {% for term, rows in result_by_term.items() %}
                 <div class="card mb-4">
                     <div class="card-body">

@@ -174,9 +174,42 @@ def index():
                     
                     per_term["sort_order"] = per_term["구분"].map(order).fillna(99)
                     per_term = per_term.sort_values("sort_order").drop(columns=["sort_order"])
+                    
                     result_by_term[term] = per_term.to_dict(orient="records")
+                    
+                    ## ✅ 예시 row 저장
+                    #if not 'example_row' in locals() and not per_term.empty:
+                    #    #example_row = per_term.iloc[0]  ← 이건 Series
+                    #    example_row = per_term.iloc[0].to_dict()  # ✅ dict로 변환
+                    
+            # ✅ 전체 단어가 포함된 논리명을 가진 행에서 예시 추출
+            if 'example_row' not in locals():
+                example_row = find_combined_example_row(df_std, flat_terms)
 
-    return render_template("index.html", result=result, result_by_term=result_by_term, keyword=keyword, match_type=match_type)
+
+    #return render_template("index.html", result=result, result_by_term=result_by_term, keyword=keyword, match_type=match_type)
+    return render_template("index.html", result=result, result_by_term=result_by_term, keyword=keyword, match_type=match_type, example_row=locals().get('example_row'))
+
+
+
+def find_combined_example_row(df, terms):
+    """모든 단어를 포함하는 논리명 AND 구분이 '단어'인 row 추출"""
+    print(f"[LOG] 예시 추출: 논리명에 모든 단어 {terms} 포함 AND 구분='단어' 인 행 검색 시작")
+
+    for idx, row in df.iterrows():
+        if str(row.get("구분", "")) != "단어":
+            continue  # ✅ 구분이 '단어'가 아닌 행은 스킵
+
+        logic_name = str(row['논리명']).lower()
+        if all(term in logic_name for term in terms):
+            print(f"[LOG] 예시 행 발견 → 논리명: '{row['논리명']}', 물리명: '{row['물리명']}' (구분: {row['구분']})")
+            return row.to_dict()
+
+    print("[LOG] 예시로 사용할 조합 논리명 행을 찾지 못함 (구분=단어 조건 포함)")
+    return None
+
+
+
 
 
 # 브라우저 자동 열기
