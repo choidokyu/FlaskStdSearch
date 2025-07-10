@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import webbrowser
 import threading
@@ -69,7 +69,11 @@ def index():
                     print(f"[LOG] 한글 '{term}' → 매핑 없음, 원래 단어 사용")
                     mapped_groups.append([term.lower()])
 
-        flat_terms = list(set(itertools.chain.from_iterable(mapped_groups)))
+        # 기존 코드 (순서 망가짐)
+        #flat_terms = list(set(itertools.chain.from_iterable(mapped_groups)))
+        # 중복 없이 순서를 유지하려면 dict.fromkeys 사용
+        flat_terms = list(dict.fromkeys(itertools.chain.from_iterable(mapped_groups)))
+
 
         combinations = []
         if len(mapped_groups) >= 2:
@@ -108,29 +112,124 @@ def index():
         print(f"[LOG] 필터링된 결과 행 수: {len(filtered)}")
 
         if not filtered.empty:
+            print("[LOG] 논리명 기반 구분한글명 매핑 시작")
+            
+            # '물리명' 또는 '논리명' 기준으로 매핑 수행 — 여긴 논리명이 더 적합함
+            df_map = han_eng_map.copy()
+            df_map.columns = ["한글명", "영문명"]
+
+            # '논리명'에 영문 단어가 포함되어 있는지 보고 매핑
+            def map_korean(logic_name):
+                logic_name_str = str(logic_name) if pd.notnull(logic_name) else ""
+                logic_words = re.findall(r'\b\w+\b', logic_name_str)  # 단어 분리
+                logic_words_lower = [w.lower() for w in logic_words]
+
+                for _, row in df_map.iterrows():
+                    eng = str(row["영문명"]).lower().replace(" ", "")
+                    if eng in logic_words_lower:
+                        print(f"[MAP] 논리명 '{logic_name}' → 단어 '{eng}' 매칭 → 한글명: '{row['한글명']}'")
+                        return row["한글명"]
+
+                print(f"[MAP] 논리명 '{logic_name}' → 매칭 없음")
+                return ""
+
+
+
+            filtered["구분한글명"] = filtered["논리명"].apply(map_korean)
+
+            print("[LOG] 구분한글명 매핑 완료")
+
             filtered["sort_order"] = filtered["구분"].map(order).fillna(99)
             filtered = filtered.sort_values("sort_order").drop(columns=["sort_order"])
             result = filtered.to_dict(orient="records")
+
         else:
             print("[LOG] 조합 결과 없음 → 단어별 개별 필터링 시도")
+            
+            # 구분한글명 매핑 함수 재사용을 위해 정의된 상태여야 함
+            df_map = han_eng_map.copy()
+            df_map.columns = ["한글명", "영문명"]
+
+            def map_korean(logic_name):
+                logic_name_str = str(logic_name) if pd.notnull(logic_name) else ""
+                logic_words = re.findall(r'\b\w+\b', logic_name_str)
+                logic_words_lower = [w.lower() for w in logic_words]
+                for _, row in df_map.iterrows():
+                    eng = str(row["영문명"]).lower().replace(" ", "")
+                    if eng in logic_words_lower:
+                        return row["한글명"]
+                return ""
+            
             for term in flat_terms:
                 if match_type == "exact":
                     per_term = df_std[df_std["논리명"].astype(str).str.lower() == term]
                 else:
                     per_term = df_std[df_std["논리명"].astype(str).str.lower().str.contains(term)]
+                    
                 if not per_term.empty:
                     print(f"[LOG] '{term}' → {len(per_term)}개 결과")
+                    
+                    # ✅ 구분한글명 매핑 추가
+                    per_term["구분한글명"] = per_term["논리명"].apply(map_korean)
+                    
                     per_term["sort_order"] = per_term["구분"].map(order).fillna(99)
                     per_term = per_term.sort_values("sort_order").drop(columns=["sort_order"])
                     result_by_term[term] = per_term.to_dict(orient="records")
 
     return render_template("index.html", result=result, result_by_term=result_by_term, keyword=keyword, match_type=match_type)
 
+
 # 브라우저 자동 열기
 def open_browser():
     webbrowser.open_new("http://127.0.0.1:5000")
+
+
+@app.route("/update_mapping", methods=["POST"])
+def update_mapping():
+    data = request.get_json()
+    korean = data.get("korean")
+    english = data.get("english")
+
+    print("[LOG] 클라이언트에서 받은 데이터:")
+    print(f"한글명: {korean}")
+    print(f"영문명: {english}")
+
+    # CSV 파일 경로
+    file_path = "data/han_eng_map.csv"
+
+    try:
+        # 파일 읽기
+        df = pd.read_csv(file_path, encoding="EUC-KR")
+
+        # 일치하는 행 찾기
+        match = df["영문명"] == english
+        if not match.any():
+            return jsonify({"status": "fail", "message": f"'{english}'에 해당하는 항목을 찾을 수 없습니다."}), 404
+
+        # 한글명 수정
+        df.loc[match, "한글명"] = korean
+
+        # 파일 저장
+        df.to_csv(file_path, index=False, encoding="EUC-KR")
+
+        print("[LOG] 수정 완료 및 저장됨")
+        return jsonify({
+            "status": "success",
+            "updated_korean": korean,
+            "matched_english": english
+        })
+
+    except Exception as e:
+        print("[ERROR]", str(e))
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+
+
 
 if __name__ == "__main__":
     if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         threading.Timer(1.5, open_browser).start()
     app.run(debug=True)
+
+

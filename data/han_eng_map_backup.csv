@@ -872,7 +872,7 @@ Ctr,Ctr
 Cuo,Cuo
 통화,Currency
 현재,Current
-구금,Custody
+보관,Custody
 고객,Customer
 세관,Customs
 세관 중개인,Customs Broker
@@ -2299,7 +2299,7 @@ NSWIFT,NSWIFT
 수혜자 없음,Non beneficiary
 운영 불가,Non-Operation
 기소 불가,Non-Prosecution
-비판매,Non-Sale
+판매 불가,Non-Sale
 세금 면제 불가,Non-Tax
 비살상 무기,Non-lethal weapon
 미수령,Non-receipt
@@ -3072,7 +3072,7 @@ Rdl,Rdl
 결과,Results
 이력서,Resume
 보관됨,Retained
-보유,Retention
+보관,Retention
 은퇴,Retirement
 재전송,Retransmission
 재심사,Retrial
@@ -3137,12 +3137,12 @@ SMS,SMS
 SQL,SQL
 STD,STD
 SWIFT,SWIFT
-보존,Safekeeping
+보관,Safekeeping
 안전,Safety
 항해,Sailing
 급여,Salary
 판매,Sale
-매출,Sales
+판매,Sales
 판매세,Sales Tax
 소금,Salt
 인사말,Salutation
@@ -3211,7 +3211,7 @@ SWIFT,SWIFT
 자체 평가 세금,Self assessed tax
 자체 평가 질문,Self assessment question
 자체 통제,Self-Control
-팔다,Sell
+판매,Sell
 판매자,Seller
 판매 중,Selling
 반도체,Semi
