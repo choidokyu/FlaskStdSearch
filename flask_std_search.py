@@ -406,6 +406,7 @@ if __name__ == "__main__":
 
     if port:  # Fly.io 에서 실행할 때
         app.run(host="0.0.0.0", port=port)
+        
     else:  # 내 컴퓨터에서 실행할 때
         import webbrowser
         import threading
@@ -413,5 +414,5 @@ if __name__ == "__main__":
         def open_browser():
             webbrowser.open_new("http://127.0.0.1:5000")
 
-        threading.Timer(1.5, open_browser).start()
+        threading.Timer(2.0, open_browser).start()
         app.run(debug=True, port=5000)

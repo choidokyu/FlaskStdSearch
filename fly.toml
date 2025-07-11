@@ -4,6 +4,8 @@ primary_region = "fra"
 
 [build]
   image = "python:3.10"
+  command = "./entrypoint.sh"
+
 
 [http_service]
   internal_port = 8080
