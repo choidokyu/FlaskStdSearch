@@ -1655,7 +1655,7 @@ Hull,Hull
 탄화수소,Hydrocarbon
 IATA,IATA
 ICT,ICT
-신분증,ID
+ID,ID
 신분증,ID Card
 ID1,ID1
 ID2,ID2
@@ -1676,7 +1676,7 @@ ISO2,ISO2
 ITAX,ITAX
 아이콘,Icon
 아이디어,Idea
-식별,Identification
+신분증,Identification
 식별됨,Identified
 식별자,Identifier
 식별,Identify

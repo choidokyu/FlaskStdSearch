@@ -27,7 +27,9 @@ set commitMsg=Auto-commit %yyyy%-%mm%-%dd% %hhmm%
 git add .
 
 :: 커밋 및 푸시
-call git commit -m "%commitMsg%"
+::call git commit -m "%commitMsg%"
+call git commit -m "fix: set python version for Fly.io"
+
 git push origin main
 
 echo [완료] %commitMsg% 으로 푸시되었습니다.
