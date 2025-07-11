@@ -23,13 +23,35 @@ def index():
     result_by_term = {}
     keyword = ""
     match_type = "exact"
+    
+    # ✅ 먼저 기본값을 선언
+    option_word = True
+    option_domain = True
+    option_term = True
 
     if request.method == "POST":
+        
+        option_word   = 'option_word'   in request.form
+        option_domain = 'option_domain' in request.form
+        option_term   = 'option_term'   in request.form
+        
+
+        # 선택된 구분 리스트 구성
+        selected_types = []
+        if option_word:
+            selected_types.append("단어")
+        if option_domain:
+            selected_types.append("도메인")
+        if option_term:
+            selected_types.append("용어")
+
+        print("[LOG] 선택된 구분 옵션:", selected_types)
+        
         keyword = request.form["keyword"].strip()
         match_type = request.form.get("match_type", "exact")
         print(f"[LOG] 사용자 입력 키워드: {keyword}")
         print(f"[LOG] 선택된 매칭 방식: {match_type}")
-
+        
         # 키워드 분해 처리
         raw_terms = keyword.split()
         expanded_terms = []
@@ -47,6 +69,17 @@ def index():
 
         # 표준 데이터 로딩
         df_std = load_standard_excel()
+        
+        # 선택된 구분 필터 적용
+        if selected_types:
+            df_std = df_std[df_std["구분"].isin(selected_types)]
+            print(f"[LOG] 선택된 구분만 필터링된 데이터 수: {len(df_std)}")
+            
+        else:
+            print("[LOG] 선택된 구분이 없어 결과 없음")
+            df_std = df_std.iloc[0:0]  # 빈 DataFrame 강제 설정
+            
+
 
         # 한글-영문 매핑 테이블 로딩
         print("[LOG] Loading han_eng_map.csv...")
@@ -96,18 +129,21 @@ def index():
         # 통합 검색
         filtered = pd.DataFrame()
         if len(terms) == 1:
-            filtered = df_std[df_std["논리명"].astype(str).str.lower().apply(
-                lambda x: match_logic(x, search_terms)
-            )]
+            filtered = df_std[
+                df_std["논리명"].astype(str).str.lower().apply(lambda x: match_logic(x, search_terms)) |
+                df_std["물리명"].astype(str).str.lower().apply(lambda x: match_logic(x, search_terms))
+            ]
         else:
             if match_type == "exact":
-                filtered = df_std[df_std["논리명"].astype(str).str.lower().apply(
-                    lambda x: any(x == c for c in combinations)
-                )]
+                filtered = df_std[
+                    df_std["논리명"].astype(str).str.lower().apply(lambda x: any(x == c for c in combinations)) |
+                    df_std["물리명"].astype(str).str.lower().apply(lambda x: any(x == c for c in combinations))
+                ]
             else:
-                filtered = df_std[df_std["논리명"].astype(str).str.lower().apply(
-                    lambda x: all(term in x for term in flat_terms) or any(c in x for c in combinations)
-                )]
+                filtered = df_std[
+                    df_std["논리명"].astype(str).str.lower().apply(lambda x: all(term in x for term in flat_terms) or any(c in x for c in combinations)) |
+                    df_std["물리명"].astype(str).str.lower().apply(lambda x: all(term in x for term in flat_terms) or any(c in x for c in combinations))
+                ]
 
         print(f"[LOG] 필터링된 결과 행 수: {len(filtered)}")
 
@@ -141,8 +177,56 @@ def index():
 
             filtered["sort_order"] = filtered["구분"].map(order).fillna(99)
             filtered = filtered.sort_values("sort_order").drop(columns=["sort_order"])
+            
             result = filtered.to_dict(orient="records")
+            
+            if len(filtered) == 1:
+                print("[LOG] 통합 결과가 1건이므로 각 단어별 결과도 함께 조회합니다.")
 
+                # map_korean 함수 재정의 되어 있어야 함 (위 if와 동일)
+                df_map = han_eng_map.copy()
+                df_map.columns = ["한글명", "영문명"]
+
+                def map_korean(logic_name):
+                    logic_name_str = str(logic_name) if pd.notnull(logic_name) else ""
+                    logic_words = re.findall(r'\b\w+\b', logic_name_str)
+                    logic_words_lower = [w.lower() for w in logic_words]
+                    for _, row in df_map.iterrows():
+                        eng = str(row["영문명"]).lower().replace(" ", "")
+                        if eng in logic_words_lower:
+                            return row["한글명"]
+                    return ""
+
+                for term in flat_terms:
+                    if match_type == "exact":
+                        per_term = df_std[
+                            (df_std["논리명"].astype(str).str.lower() == term) |
+                            (df_std["물리명"].astype(str).str.lower() == term)
+                        ]
+                    else:
+                        per_term = df_std[
+                            df_std["논리명"].astype(str).str.lower().str.contains(term) |
+                            df_std["물리명"].astype(str).str.lower().str.contains(term)
+                        ]
+
+                    if not per_term.empty:
+                        print(f"[LOG] [1건 fallback] '{term}' → {len(per_term)}개 결과")
+                        
+                        # 예: per_term = per_term[조건]
+                        per_term = per_term[per_term["구분"] == "단어"]
+
+                        per_term = per_term.copy()
+                        per_term["구분한글명"] = per_term["논리명"].apply(map_korean)
+
+                        per_term["sort_order"] = per_term["구분"].map(order).fillna(99)
+                        per_term = per_term.sort_values("sort_order").drop(columns=["sort_order"])
+
+                        result_by_term[term] = per_term.to_dict(orient="records")
+                        
+                        print(f"[LOG] 최종 result_by_term keys: {list(result_by_term.keys())}")
+            
+            
+            
         else:
             print("[LOG] 조합 결과 없음 → 단어별 개별 필터링 시도")
             
@@ -162,12 +246,21 @@ def index():
             
             for term in flat_terms:
                 if match_type == "exact":
-                    per_term = df_std[df_std["논리명"].astype(str).str.lower() == term]
+                    per_term = df_std[
+                        (df_std["논리명"].astype(str).str.lower() == term) |
+                        (df_std["물리명"].astype(str).str.lower() == term)
+                    ]
                 else:
-                    per_term = df_std[df_std["논리명"].astype(str).str.lower().str.contains(term)]
+                    per_term = df_std[
+                        df_std["논리명"].astype(str).str.lower().str.contains(term) |
+                        df_std["물리명"].astype(str).str.lower().str.contains(term)
+                    ]
                     
                 if not per_term.empty:
                     print(f"[LOG] '{term}' → {len(per_term)}개 결과")
+                    
+                    # 예: per_term = per_term[조건]
+                    per_term = per_term[per_term["구분"] == "단어"]
                     
                     # ✅ 구분한글명 매핑 추가
                     per_term["구분한글명"] = per_term["논리명"].apply(map_korean)
@@ -176,6 +269,8 @@ def index():
                     per_term = per_term.sort_values("sort_order").drop(columns=["sort_order"])
                     
                     result_by_term[term] = per_term.to_dict(orient="records")
+                    
+                    print(f"[LOG] 최종 result_by_term keys: {list(result_by_term.keys())}")
                     
                     ## ✅ 예시 row 저장
                     #if not 'example_row' in locals() and not per_term.empty:
@@ -188,7 +283,19 @@ def index():
 
 
     #return render_template("index.html", result=result, result_by_term=result_by_term, keyword=keyword, match_type=match_type)
-    return render_template("index.html", result=result, result_by_term=result_by_term, keyword=keyword, match_type=match_type, example_row=locals().get('example_row'))
+    #return render_template("index.html", result=result, result_by_term=result_by_term, keyword=keyword, match_type=match_type, example_row=locals().get('example_row'))
+    return render_template(
+        "index.html",
+        result=result,
+        result_by_term=result_by_term,
+        keyword=keyword,
+        match_type=match_type,
+        example_row=locals().get('example_row'),
+        option_word=option_word,
+        option_domain=option_domain,
+        option_term=option_term
+    )
+
 
 
 
@@ -201,6 +308,7 @@ def find_combined_example_row(df, terms):
             continue  # ✅ 구분이 '단어'가 아닌 행은 스킵
 
         logic_name = str(row['논리명']).lower()
+        
         if all(term in logic_name for term in terms):
             print(f"[LOG] 예시 행 발견 → 논리명: '{row['논리명']}', 물리명: '{row['물리명']}' (구분: {row['구분']})")
             return row.to_dict()

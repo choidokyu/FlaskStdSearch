@@ -2713,7 +2713,7 @@ Pnr,Pnr
 수익,Proceeds
 처리,Process
 처리됨,Processed
-처리,Processing
+처리중,Processing
 처리자,Processor
 조달,Procure
 조달,Procurement
@@ -3142,7 +3142,7 @@ SWIFT,SWIFT
 항해,Sailing
 급여,Salary
 판매,Sale
-매출,Sales
+매상,Sales
 판매세,Sales Tax
 소금,Salt
 인사말,Salutation
