@@ -1,0 +1,1 @@
+web: gunicorn flask_std_search:app
