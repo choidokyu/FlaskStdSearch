@@ -184,13 +184,17 @@
                   물리명 <strong>{{ example_row['물리명'] }}</strong>
               </div>
             {% else %}
+            
               {% set physical_names = [] %}
               {% for term in result_by_term.keys() %}
-                {% set row = result_by_term[term][0] %}
-                {% if row['물리명'] %}
-                  {% set _ = physical_names.append(row['물리명']) %}
+                {% if result_by_term[term]|length > 0 %}
+                  {% set row = result_by_term[term][0] %}
+                  {% if row['물리명'] %}
+                    {% set _ = physical_names.append(row['물리명']) %}
+                  {% endif %}
                 {% endif %}
               {% endfor %}
+              
               {% if physical_names %}
                 <div class="alert alert-secondary">
                     예시: 논리명 <strong>{{ keyword }}</strong>이고 

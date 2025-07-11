@@ -8,10 +8,28 @@ import itertools
 
 app = Flask(__name__)
 
+
+# 전역 캐시 변수
+df_std_global = None
+han_eng_map_global = None
+
+
+def load_data_once():
+    global df_std_global, han_eng_map_global
+
+    if df_std_global is None:
+        print("[INIT] Loading 표준데이터관리.xls...")
+        df_std_global = pd.read_excel("data/표준데이터관리.xls", sheet_name="Sheet1")
+
+    if han_eng_map_global is None:
+        print("[INIT] Loading han_eng_map.csv...")
+        han_eng_map_global = pd.read_csv("data/han_eng_map.csv", encoding="EUC-KR", usecols=[0, 1])
+        han_eng_map_global.columns = han_eng_map_global.columns.str.replace('\ufeff', '')
+
 # 표준 데이터 엑셀 파일 로딩
-def load_standard_excel():
-    print("[LOG] Loading 표준데이터관리.xls...")
-    return pd.read_excel("data/표준데이터관리.xls", sheet_name="Sheet1")
+#def load_standard_excel():
+#    print("[LOG] Loading 표준데이터관리.xls...")
+#    return pd.read_excel("data/표준데이터관리.xls", sheet_name="Sheet1")
 
 # CamelCase/PascalCase 단어 분해 함수
 def split_camel_case(word):
@@ -19,6 +37,8 @@ def split_camel_case(word):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    load_data_once()  # ✅ 캐시된 데이터 사용 준비
+    
     result = []
     result_by_term = {}
     keyword = ""
@@ -68,7 +88,7 @@ def index():
         print(f"[LOG] 최종 분리된 검색어 terms: {terms}")
 
         # 표준 데이터 로딩
-        df_std = load_standard_excel()
+        df_std = df_std_global.copy()            # ✅ 전역에서 복사
         
         # 선택된 구분 필터 적용
         if selected_types:
@@ -83,8 +103,9 @@ def index():
 
         # 한글-영문 매핑 테이블 로딩
         print("[LOG] Loading han_eng_map.csv...")
-        han_eng_map = pd.read_csv("data/han_eng_map.csv", encoding="EUC-KR", usecols=[0, 1])
-        han_eng_map.columns = han_eng_map.columns.str.replace('\ufeff', '')
+        #han_eng_map = pd.read_csv("data/han_eng_map.csv", encoding="EUC-KR", usecols=[0, 1])
+        han_eng_map = han_eng_map_global.copy()  # ✅ 전역에서 복사
+        #han_eng_map.columns = han_eng_map.columns.str.replace('\ufeff', '')
         print("[LOG] 매핑 테이블 컬럼명:", han_eng_map.columns.tolist())
 
         # 단어 매핑
@@ -352,7 +373,11 @@ def update_mapping():
 
         # 파일 저장
         df.to_csv(file_path, index=False, encoding="EUC-KR")
-
+        
+        # ✅ 전역 캐시 갱신
+        global han_eng_map_global
+        han_eng_map_global = df.copy()
+        
         print("[LOG] 수정 완료 및 저장됨")
         return jsonify({
             "status": "success",
