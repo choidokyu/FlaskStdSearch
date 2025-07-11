@@ -1,5 +1,7 @@
 app = "flaskstdsearch"
 
+primary_region = "fra"
+
 [http_service]
   internal_port = 8080
   force_https = true
@@ -7,6 +9,3 @@ app = "flaskstdsearch"
   auto_stop_machines = true
   min_machines_running = 0
   processes = ["app"]
-
-[primary_region]
-  region = "fra"
