@@ -45,7 +45,7 @@ API,API
 부재,Absence
 부재자,Absentee
 절대성,Absoluteness
-수용,Accept
+승인,Accept
 수용,Acceptance
 수용 신청,Acceptance Of Application
 승인,Accepted
@@ -191,7 +191,7 @@ AI,Ai
 익명,Anonymous
 답변,Answer
 답변자,Answer Person
-예상,Anticipation
+예견,Anticipation
 반덤핑,Antidumping
 반덤핑 관세,Antidumping Tariff
 모든,Any
@@ -205,7 +205,7 @@ APIS,Apis
 항소,Appellation
 해당,Applicable
 신청인,Applicant
-신청서,Application
+신청,Application
 신청 기간,Application Form
 신청,Application Period
 임명,Applied
@@ -225,7 +225,7 @@ APIS,Apis
 승인,Approval Line
 승인자,Approve
 4월,Approved
-중재인,Approver
+승인자,Approver
 면적,April
 논쟁,Arbitrator
 무기,Area
@@ -280,10 +280,10 @@ APIS,Apis
 주의,Attendant
 변호사,Attendee
 속성,Attention
-경매,Attorney
-경매됨,Attribute
-청중,Auction
-감사,Auctioned
+변호사,Attorney
+속성,Attribute
+경매,Auction
+경매된,Auctioned
 감사 담당자,Audience
 감사 결과,Audit
 감사 팀,Audit Officer
@@ -523,7 +523,7 @@ CIF,CIF
 운송,Carrying
 운송비,Carrying Charge
 카트,Cart
-케이스,Case
+사례,Case
 현금,Cash
 계산원,Cashier
 카지노,Casino
@@ -570,7 +570,7 @@ CIF,CIF
 부과,Charge
 자산 과징금,Charge Over Asset
 과징 가능,Chargeable
-과징됨,Charged
+압류됨,Charged
 차트,Chart
 전세,Charter
 전세 계약자,Charterer
@@ -678,7 +678,7 @@ COB,Cob
 명령,Command
 개시,Commencement
 표창,Commendation
-논평,Comment
+설명,Comment
 상업,Commerce
 상업,Commercial
 위원,Commisioner
@@ -776,12 +776,12 @@ COB,Cob
 컨테이너,Contactor
 컨테이너 화물 스테이션,Container
 내용,Container freight station
-맥락,Contents
+내용,Contents
 대륙,Context
 우발 사건,Continent
 계속,Contingency
 계약,Continuation
-계약 문서,Contract
+계약,Contract
 계약자,Contract Document
 모순,Contractor
 위반,Contradiction
@@ -967,8 +967,8 @@ DRD,DRD
 납품,Delivery
 납품 지점,Delivery Point
 납품 주문,Delivery order
-수요,Demand
-수요 통지,Demand Notice
+부과,Demand
+납부통지서,Demand Notice
 수요자,Demander
 시연,Demonstration
 거부,Denied
@@ -1053,7 +1053,7 @@ DGI,Dgi
 불허,Disallowed
 재난,Disaster
 폐기,Discard
-하역,Discharge
+면제,Discharge
 하역됨,Discharged
 징계,Discipline
 공개,Disclose
@@ -1315,7 +1315,7 @@ Excellence,Excellence
 종료 노트,Exit note
 확장,Expansion
 기대,Expectation
-예상,Expected
+예상된,Expected
 지출,Expend
 지출,Expenditure
 지출,Expense
@@ -1676,7 +1676,7 @@ ISO2,ISO2
 ITAX,ITAX
 아이콘,Icon
 아이디어,Idea
-신분증,Identification
+ID,Identification
 식별됨,Identified
 식별자,Identifier
 식별,Identify
@@ -1824,7 +1824,7 @@ ITAX,ITAX
 차단,Intercept
 차단,Interception
 교환,Interchange
-이해관계,Interest
+이자,Interest
 이해관계,Interests
 인터페이스,Interface
 중개자,Intermediary
@@ -1867,7 +1867,7 @@ ISP,Isps
 발급된,Issued
 발급자,Issuee
 발급자,Issuer
-품목,Item
+항목,Item
 반복,Iteration
 여정,Itinerary
 재고 상품,Iventory Goods
@@ -2333,7 +2333,7 @@ NSWIFT,NSWIFT
 미탑재,Not report
 참고,Note
 공지사항 발행,Note Issuing
-공지,Notice
+통지,Notice
 공지사항,Notice Article
 공지평가,Notice Assessment
 인증거부공지,Notice Of Refusal Of Certification
@@ -2346,7 +2346,7 @@ NSWIFT,NSWIFT
 지금,Now
 현재 스테이션,Now Station
 Null,Null
-숫자,Number
+번호,Number
 횟수,Number Of Times
 숫자1,Number1
 숫자2,Number2
@@ -2633,7 +2633,7 @@ Pnr,Pnr
 포털,Portal
 부분,Portion
 포틀릿,Portlet
-직위,Position
+위치,Position
 직위 수,Position Count
 보유 직위,Position Held
 소유,Possession
@@ -2736,8 +2736,8 @@ Pnr,Pnr
 진행형 잭포트,Progressive Jackport
 금지,Prohibition
 프로젝트,Project
-예상,Projected
-예상,Projection
+예측된,Projected
+예측,Projection
 프롤로그,Prologue
 약속,Promise
 약속어음,Promissory Note
@@ -2759,7 +2759,7 @@ Pnr,Pnr
 기소,Prosecute
 기소인,Prosecution
 검찰관,Prosecutor
-예상,Prospect
+기대,Prospect
 보호,Protection
 항의,Protest
 공증인,Prothonotary
@@ -2776,10 +2776,10 @@ Pnr,Pnr
 공개 인증,Public Certification
 공무원,Public Servant
 공고,Publication
-공개,Publish
-공개 회사,Publish Company
-공개됨,Published
-발행인,Publisher
+게시,Publish
+게시기관,Publish Company
+게시됨,Published
+게시자,Publisher
 처벌,Punishment
 학생,Pupil
 매수,Purchase
@@ -2892,7 +2892,7 @@ Rdl,Rdl
 추천자,Recommender
 재건,Recon
 화해,Reconciled
-화해,Reconciliation
+조정,Reconciliation
 재건,Reconstruction
 기록,Record
 기록,Recording
@@ -3430,7 +3430,7 @@ Sso,Sso
 대체,Subtitle
 부제목,Subtotal
 소계,Subtraction
-감산,Subward
+서브와드,Subward
 하위,Succeeding
 후속,Success
 성공,Successful Bid
@@ -3473,7 +3473,7 @@ Sso,Sso
 측량사,Surveyor
 생존,Survival
 용의자,Suspect
-매달림,Suspended
+정지됨,Suspended
 미결,Suspense
 매달림,Suspension
 의심,Suspicion
@@ -3748,7 +3748,7 @@ Un,Un
 사업,Undertaking
 분배되지 않음,Undistributed
 획득되지 않음,Unearned
-예상치 못하게,Unexpectedly
+뜻밖에,Unexpectedly
 불성실함,Unfaithful
 미분배,Unfiled
 통합,Unification
@@ -3782,7 +3782,7 @@ Un,Un
 업데이트,Update
 업데이트됨,Updated
 업로드,Upload
-상한,Upper
+상위,Upper
 상한 가격,Upper Limit
 상한 가격,Upper Limit Price
 상한 가격,Upward
@@ -3884,7 +3884,7 @@ Wad,Wad
 보행로,Walk
 벽,Wall
 입장권 부족 전표,Want of entry slip
-병동,Ward
+와드,Ward
 창고,Warehouse
 경고,Warning
 보증서,Warrant
@@ -3960,7 +3960,7 @@ Wco,Wco
 가치 있는,Worthy
 쓰기,Write
 답변,Write Back
-삭감,Write Off
+상각,Write Off
 쓰기,Writing
 서면,Written
 서면 증거,Written Evidence
@@ -3976,7 +3976,7 @@ Xaf,Xaf
 X선,Xray
 YN,YN
 야드,Yard
-년,Year
+연도,Year
 년 및 월,Year And Month
 년 반기,Year Half-Year
 년 분기,Year Quarter

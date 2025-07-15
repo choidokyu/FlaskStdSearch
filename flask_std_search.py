@@ -115,7 +115,9 @@ def index():
                 print(f"[LOG] 영문 직접 입력: {term}")
                 mapped_groups.append([term.lower()])
             else:
-                mapped = han_eng_map[han_eng_map["한글명"].str.contains(term, na=False)]["영문명"].tolist()
+                #mapped = han_eng_map[han_eng_map["한글명"].str.contains(term, na=False)]["영문명"].tolist()
+                mapped = han_eng_map[han_eng_map["한글명"].str.contains(term, na=False, regex=False)]["영문명"].tolist()
+
                 if mapped:
                     print(f"[LOG] 한글 '{term}' → 매핑된 영문: {mapped}")
                     mapped_groups.append([m.lower().replace(" ", "") for m in mapped])
@@ -390,13 +392,29 @@ def update_mapping():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
-
-
-
 #if __name__ == "__main__":
 #    if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
 #        threading.Timer(1.5, open_browser).start()
 #    app.run(debug=True)
+
+
+#if __name__ == "__main__":
+#    import os
+#
+#    port = int(os.environ.get("PORT", 0))
+#
+#    if port:  # Fly.io 에서 실행할 때
+#        app.run(host="0.0.0.0", port=port)
+#        
+#    else:  # 내 컴퓨터에서 실행할 때
+#        import webbrowser
+#        import threading
+#
+#        def open_browser():
+#            webbrowser.open_new("http://127.0.0.1:5000")
+#
+#        threading.Timer(2.0, open_browser).start()
+#        app.run(debug=True, port=5000)
 
 
 if __name__ == "__main__":
@@ -407,12 +425,16 @@ if __name__ == "__main__":
     if port:  # Fly.io 에서 실행할 때
         app.run(host="0.0.0.0", port=port)
         
-    else:  # 내 컴퓨터에서 실행할 때
+    else:  # 로컬 실행 시
         import webbrowser
         import threading
 
         def open_browser():
             webbrowser.open_new("http://127.0.0.1:5000")
 
-        threading.Timer(2.0, open_browser).start()
+        if os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+            threading.Timer(2.0, open_browser).start()
+
         app.run(debug=True, port=5000)
+
+
