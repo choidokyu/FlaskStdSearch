@@ -270,7 +270,7 @@ APIS,Apis
 현금,Assureur
 첨부,At
 첨부됨,Atm
-첨부 문서 첨부,Attach
+첨부,Attach
 첨부,Attached
 시도,Attaching Documents
 참석,Attachment
@@ -433,7 +433,7 @@ Bgft,Bgft
 브라우저,Budget
 예산,Buffer
 버퍼,Build
-구축,Building
+건물,Building
 구축,Built-In
 내장,Bulk
 대량,Bulletin
@@ -604,7 +604,7 @@ CIF,CIF
 상황,Circumstances
 소환장,Citation
 시민,Citizen
-시민,City
+도시,City
 민사,Civil
 민사법,Civil Affairs
 민사인,Civil Law
@@ -1235,7 +1235,7 @@ Ems,Ems
 진입,Enter
 엔터프라이즈,Enterprise
 엔터프라이즈 개수,Enterprise Count
-엔터티,Entity
+대상자,Entity
 입국 회사,Entrance Company
 입국 국가,Entrance Country
 입국자,Entrant
@@ -1921,7 +1921,7 @@ LOGS,LOGS
 실험실,Laboratory
 Lack,Lack
 라미네이터,Laminator
-육로,Land
+토지,Land
 육로 경로,Land Route
 육로 운송 규제 당국,Land transport regulatory authority
 착륙,Landing
@@ -2425,7 +2425,7 @@ Ok,Ok
 옵티마이저,Optimizer
 옵션,Option
 오라클,Oracle
-주문,Order
+명령,Order
 주문 혼합,Order Compoundment
 주문,Ordering
 일반성,Ordinariness
@@ -2539,7 +2539,7 @@ PAYE,PAYE
 지불인,Payer
 납부,Payin
 탑재량,Payload
-지불,Payment
+납부,Payment
 지불 약정 계획,Payment Arrangement Plan
 납부세 할부,Payment Tax Installment
 지불 서비스 제공업체,Payment service provider
@@ -2568,7 +2568,7 @@ PDF,Pdf
 허가,Permission
 허가,Permit
 영구,Perpetual
-영구적,Pershable
+부패하는,Pershable
 폐쇄 가능,Person
 인,Person Of Cancellation
 취소인,Person in charge
@@ -2619,7 +2619,7 @@ Pg,Pg
 복수형,Plural
 Plv,Plv
 Pnr,Pnr
-우편 사서함,Pobox
+사서함,Pobox
 지점,Point
 포인터,Pointer
 경찰,Police
@@ -3123,7 +3123,7 @@ Rdl,Rdl
 규칙,Rule
 규칙 기반,Rule Base
 룰러,Ruler
-룰링,Ruling
+판결,Ruling
 런,Run
 활주로,Runway
 러시아,Russia
@@ -3610,7 +3610,7 @@ TCC,Tcc
 팁,Tip
 팁오프,Tip-Off
 타이어,Tire
-소유권,Title
+직책,Title
 소유자,Titleholder
 종료,To
 미정,To be determined
@@ -3887,7 +3887,7 @@ Wad,Wad
 와드,Ward
 창고,Warehouse
 경고,Warning
-보증서,Warrant
+영장,Warrant
 보증인,Warrantee
 Was,Was
 세척,Wash
@@ -3974,7 +3974,7 @@ Wco,Wco
 X선 이미지 분석,X-ray image analysis
 Xaf,Xaf
 X선,Xray
-YN,YN
+여부,YN
 야드,Yard
 연도,Year
 년 및 월,Year And Month
